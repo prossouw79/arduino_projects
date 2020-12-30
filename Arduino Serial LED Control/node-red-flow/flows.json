@@ -1,0 +1,645 @@
+[
+    {
+        "id": "3a912c7a.731e7c",
+        "type": "tab",
+        "label": "Basic",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "c508e412.1fe548",
+        "type": "telegram bot",
+        "z": "",
+        "botname": "Arduino_LED_Monitor",
+        "usernames": "",
+        "chatids": "",
+        "baseapiurl": "",
+        "updatemode": "polling",
+        "pollinterval": "300",
+        "usesocks": false,
+        "sockshost": "",
+        "socksport": "6667",
+        "socksusername": "anonymous",
+        "sockspassword": "",
+        "bothost": "",
+        "botpath": "",
+        "localbotport": "8443",
+        "publicbotport": "8443",
+        "privatekey": "",
+        "certificate": "",
+        "useselfsignedcertificate": false,
+        "sslterminated": false,
+        "verboselogging": false
+    },
+    {
+        "id": "d92f504d.052e1",
+        "type": "serial-port",
+        "z": "",
+        "serialport": "/dev/ttyACM0",
+        "serialbaud": "9600",
+        "databits": "8",
+        "parity": "none",
+        "stopbits": "1",
+        "waitfor": "",
+        "dtr": "none",
+        "rts": "none",
+        "cts": "none",
+        "dsr": "none",
+        "newline": "\\n",
+        "bin": "false",
+        "out": "char",
+        "addchar": "",
+        "responsetimeout": "10000"
+    },
+    {
+        "id": "8c1fe2d4.3438d",
+        "type": "serial-port",
+        "z": "",
+        "serialport": "/dev/ttyACM0",
+        "serialbaud": "9600",
+        "databits": "8",
+        "parity": "none",
+        "stopbits": "1",
+        "waitfor": "",
+        "dtr": "none",
+        "rts": "none",
+        "cts": "none",
+        "dsr": "none",
+        "newline": "\\n",
+        "bin": "false",
+        "out": "char",
+        "addchar": "",
+        "responsetimeout": "10000"
+    },
+    {
+        "id": "dbd85f09.8e93d",
+        "type": "serial-port",
+        "z": "",
+        "serialport": "",
+        "serialbaud": "57600",
+        "databits": "8",
+        "parity": "none",
+        "stopbits": "1",
+        "waitfor": "",
+        "dtr": "none",
+        "rts": "none",
+        "cts": "none",
+        "dsr": "none",
+        "newline": "\\n",
+        "bin": "false",
+        "out": "char",
+        "addchar": "",
+        "responsetimeout": "10000"
+    },
+    {
+        "id": "44b24353.cf7d3c",
+        "type": "serial out",
+        "z": "3a912c7a.731e7c",
+        "name": "TO Arduino ACM0",
+        "serial": "d92f504d.052e1",
+        "x": 1030,
+        "y": 1040,
+        "wires": []
+    },
+    {
+        "id": "e5ee3715.ffd2c8",
+        "type": "telegram command",
+        "z": "3a912c7a.731e7c",
+        "name": "/start",
+        "command": "/start",
+        "bot": "c508e412.1fe548",
+        "strict": false,
+        "hasresponse": false,
+        "useregex": false,
+        "removeregexcommand": false,
+        "outputs": 1,
+        "x": 510,
+        "y": 140,
+        "wires": [
+            [
+                "35bac247.e1239e",
+                "85b74554.9af578"
+            ]
+        ]
+    },
+    {
+        "id": "a16e6db6.c62d3",
+        "type": "telegram sender",
+        "z": "3a912c7a.731e7c",
+        "name": "",
+        "bot": "c508e412.1fe548",
+        "haserroroutput": false,
+        "outputs": 1,
+        "x": 950,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "35bac247.e1239e",
+        "type": "function",
+        "z": "3a912c7a.731e7c",
+        "name": "startMessage",
+        "func": "msg.payload.content = \n`Welcome to the Arduino LED Monitor bot!\n\nYou can send:\n\n/red - toggle RED\n/orange - toggle ORANGE\n/green - toggle GREEN\n/on - all ON\n/off - all OFF\n/photo - grab a webcam snapshot\n\n/help - print this message\n`;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 740,
+        "y": 100,
+        "wires": [
+            [
+                "a16e6db6.c62d3"
+            ]
+        ]
+    },
+    {
+        "id": "2ce5b049.99a4d",
+        "type": "telegram command",
+        "z": "3a912c7a.731e7c",
+        "name": "/red",
+        "command": "/red",
+        "bot": "c508e412.1fe548",
+        "strict": false,
+        "hasresponse": false,
+        "useregex": false,
+        "removeregexcommand": false,
+        "outputs": 1,
+        "x": 510,
+        "y": 780,
+        "wires": [
+            [
+                "3f3980fd.dea73"
+            ]
+        ]
+    },
+    {
+        "id": "df544aa8.43f448",
+        "type": "telegram command",
+        "z": "3a912c7a.731e7c",
+        "name": "/orange",
+        "command": "/orange",
+        "bot": "c508e412.1fe548",
+        "strict": false,
+        "hasresponse": false,
+        "useregex": false,
+        "removeregexcommand": false,
+        "outputs": 1,
+        "x": 510,
+        "y": 840,
+        "wires": [
+            [
+                "f514b259.3733c"
+            ]
+        ]
+    },
+    {
+        "id": "3fbe6a30.442ec6",
+        "type": "telegram command",
+        "z": "3a912c7a.731e7c",
+        "name": "/green",
+        "command": "/green",
+        "bot": "c508e412.1fe548",
+        "strict": false,
+        "hasresponse": false,
+        "useregex": false,
+        "removeregexcommand": false,
+        "outputs": 1,
+        "x": 510,
+        "y": 900,
+        "wires": [
+            [
+                "fd1d8b3a.cd8bc8"
+            ]
+        ]
+    },
+    {
+        "id": "3f3980fd.dea73",
+        "type": "function",
+        "z": "3a912c7a.731e7c",
+        "name": "redMessage",
+        "func": "msg.payload = \"red\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 670,
+        "y": 780,
+        "wires": [
+            [
+                "44b24353.cf7d3c"
+            ]
+        ]
+    },
+    {
+        "id": "f514b259.3733c",
+        "type": "function",
+        "z": "3a912c7a.731e7c",
+        "name": "orangeMessage",
+        "func": "msg.payload = \"orange\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 680,
+        "y": 840,
+        "wires": [
+            [
+                "44b24353.cf7d3c"
+            ]
+        ]
+    },
+    {
+        "id": "fd1d8b3a.cd8bc8",
+        "type": "function",
+        "z": "3a912c7a.731e7c",
+        "name": "greenMessage",
+        "func": "msg.payload = \"green\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 680,
+        "y": 900,
+        "wires": [
+            [
+                "44b24353.cf7d3c"
+            ]
+        ]
+    },
+    {
+        "id": "4f2568c1.1f6928",
+        "type": "telegram command",
+        "z": "3a912c7a.731e7c",
+        "name": "/help",
+        "command": "/help",
+        "bot": "c508e412.1fe548",
+        "strict": false,
+        "hasresponse": true,
+        "useregex": false,
+        "removeregexcommand": false,
+        "outputs": 2,
+        "x": 510,
+        "y": 80,
+        "wires": [
+            [
+                "35bac247.e1239e"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "b41a58c8.9a5bb8",
+        "type": "telegram command",
+        "z": "3a912c7a.731e7c",
+        "name": "/on",
+        "command": "/on",
+        "bot": "c508e412.1fe548",
+        "strict": false,
+        "hasresponse": false,
+        "useregex": false,
+        "removeregexcommand": false,
+        "outputs": 1,
+        "x": 510,
+        "y": 980,
+        "wires": [
+            [
+                "e4cc99a2.607608"
+            ]
+        ]
+    },
+    {
+        "id": "81f47ae9.345d48",
+        "type": "telegram command",
+        "z": "3a912c7a.731e7c",
+        "name": "/off",
+        "command": "/off",
+        "bot": "c508e412.1fe548",
+        "strict": false,
+        "hasresponse": false,
+        "useregex": false,
+        "removeregexcommand": false,
+        "outputs": 1,
+        "x": 510,
+        "y": 1040,
+        "wires": [
+            [
+                "253df080.e504e"
+            ]
+        ]
+    },
+    {
+        "id": "e4cc99a2.607608",
+        "type": "function",
+        "z": "3a912c7a.731e7c",
+        "name": "onMessage",
+        "func": "msg.payload = \"on\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 670,
+        "y": 980,
+        "wires": [
+            [
+                "44b24353.cf7d3c"
+            ]
+        ]
+    },
+    {
+        "id": "253df080.e504e",
+        "type": "function",
+        "z": "3a912c7a.731e7c",
+        "name": "offMessage",
+        "func": "msg.payload = \"off\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 670,
+        "y": 1040,
+        "wires": [
+            [
+                "44b24353.cf7d3c"
+            ]
+        ]
+    },
+    {
+        "id": "aa7c84fb.c907f",
+        "type": "telegram receiver",
+        "z": "3a912c7a.731e7c",
+        "name": "Undeclared input",
+        "bot": "c508e412.1fe548",
+        "saveDataDir": "",
+        "filterCommands": false,
+        "x": 540,
+        "y": 20,
+        "wires": [
+            [
+                "ed72a03a.749818"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "d0ac148d.ab1b48",
+        "type": "telegram sender",
+        "z": "3a912c7a.731e7c",
+        "name": "",
+        "bot": "c508e412.1fe548",
+        "haserroroutput": false,
+        "outputs": 1,
+        "x": 1070,
+        "y": 20,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ed72a03a.749818",
+        "type": "function",
+        "z": "3a912c7a.731e7c",
+        "name": "handleUnknownInputMessage",
+        "func": "if(['/on','/off','/start','/help','/red','/green','/orange','/photo'].includes(msg.payload.content))\nreturn;\n\nif(!msg.payload.content.startsWith('/')){\n    msg.payload.content = `Free-text not supported, to see a list of available commands, type /help`;\n    return msg;\n}else{\n    msg.payload.content = `Unknown input: '${msg.payload.content}'\\nTo see a list of available commands, type /help`;\n    return msg;  \n}\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 790,
+        "y": 20,
+        "wires": [
+            [
+                "d0ac148d.ab1b48"
+            ]
+        ]
+    },
+    {
+        "id": "85b74554.9af578",
+        "type": "imagecapture",
+        "z": "3a912c7a.731e7c",
+        "name": "Image Capture",
+        "configfile": "/home/pi/fswebcam.conf",
+        "x": 1000,
+        "y": 340,
+        "wires": [
+            [
+                "2fd447c8.a88178"
+            ]
+        ]
+    },
+    {
+        "id": "b692fe0a.60f93",
+        "type": "file",
+        "z": "3a912c7a.731e7c",
+        "name": "Store File",
+        "filename": "",
+        "appendNewline": false,
+        "createDir": true,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 1560,
+        "y": 340,
+        "wires": [
+            [
+                "e38fa23d.6196a"
+            ]
+        ]
+    },
+    {
+        "id": "b51dd50c.bbd1f8",
+        "type": "function",
+        "z": "3a912c7a.731e7c",
+        "name": "mapBuffer",
+        "func": "const ts = new Date();\n\n// used to store the file\nmsg.filename = `/home/pi/Pictures/webcam/${msg.originalMessage.chat.id}_${ts.getTime()}.jpg`;\nmsg.payload = msg.payload.capturedImg;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1410,
+        "y": 340,
+        "wires": [
+            [
+                "b692fe0a.60f93"
+            ]
+        ]
+    },
+    {
+        "id": "48309a98.373054",
+        "type": "telegram sender",
+        "z": "3a912c7a.731e7c",
+        "name": "",
+        "bot": "c508e412.1fe548",
+        "haserroroutput": false,
+        "outputs": 1,
+        "x": 1490,
+        "y": 480,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e38fa23d.6196a",
+        "type": "function",
+        "z": "3a912c7a.731e7c",
+        "name": "setChatId",
+        "func": "msg.payload = {\n    content: msg.filename,\n    type:\"photo\",\n    chatId:msg.originalMessage.chat.id\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1200,
+        "y": 480,
+        "wires": [
+            [
+                "48309a98.373054"
+            ]
+        ]
+    },
+    {
+        "id": "2fd447c8.a88178",
+        "type": "image",
+        "z": "3a912c7a.731e7c",
+        "name": "",
+        "width": "96",
+        "data": "payload.capturedImg",
+        "dataType": "msg",
+        "thumbnail": false,
+        "active": true,
+        "pass": true,
+        "outputs": 1,
+        "x": 1220,
+        "y": 340,
+        "wires": [
+            [
+                "b51dd50c.bbd1f8"
+            ]
+        ]
+    },
+    {
+        "id": "ffcba702.5758b8",
+        "type": "telegram command",
+        "z": "3a912c7a.731e7c",
+        "name": "/photo",
+        "command": "/photo",
+        "bot": "c508e412.1fe548",
+        "strict": false,
+        "hasresponse": true,
+        "useregex": false,
+        "removeregexcommand": false,
+        "outputs": 2,
+        "x": 510,
+        "y": 380,
+        "wires": [
+            [
+                "85b74554.9af578"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "acea5ff.57710a",
+        "type": "telegram command",
+        "z": "3a912c7a.731e7c",
+        "name": "/red",
+        "command": "/red",
+        "bot": "c508e412.1fe548",
+        "strict": false,
+        "hasresponse": false,
+        "useregex": false,
+        "removeregexcommand": false,
+        "outputs": 1,
+        "x": 510,
+        "y": 440,
+        "wires": [
+            [
+                "c2b0e8bc.42dd68"
+            ]
+        ]
+    },
+    {
+        "id": "49a2b854.957cc8",
+        "type": "telegram command",
+        "z": "3a912c7a.731e7c",
+        "name": "/orange",
+        "command": "/orange",
+        "bot": "c508e412.1fe548",
+        "strict": false,
+        "hasresponse": false,
+        "useregex": false,
+        "removeregexcommand": false,
+        "outputs": 1,
+        "x": 510,
+        "y": 500,
+        "wires": [
+            [
+                "c2b0e8bc.42dd68"
+            ]
+        ]
+    },
+    {
+        "id": "f5fbb96d.390f08",
+        "type": "telegram command",
+        "z": "3a912c7a.731e7c",
+        "name": "/green",
+        "command": "/green",
+        "bot": "c508e412.1fe548",
+        "strict": false,
+        "hasresponse": false,
+        "useregex": false,
+        "removeregexcommand": false,
+        "outputs": 1,
+        "x": 510,
+        "y": 560,
+        "wires": [
+            [
+                "c2b0e8bc.42dd68"
+            ]
+        ]
+    },
+    {
+        "id": "a65696d.6e07168",
+        "type": "telegram command",
+        "z": "3a912c7a.731e7c",
+        "name": "/on",
+        "command": "/on",
+        "bot": "c508e412.1fe548",
+        "strict": false,
+        "hasresponse": false,
+        "useregex": false,
+        "removeregexcommand": false,
+        "outputs": 1,
+        "x": 510,
+        "y": 640,
+        "wires": [
+            [
+                "c2b0e8bc.42dd68"
+            ]
+        ]
+    },
+    {
+        "id": "8ff042e1.4dea1",
+        "type": "telegram command",
+        "z": "3a912c7a.731e7c",
+        "name": "/off",
+        "command": "/off",
+        "bot": "c508e412.1fe548",
+        "strict": false,
+        "hasresponse": false,
+        "useregex": false,
+        "removeregexcommand": false,
+        "outputs": 1,
+        "x": 510,
+        "y": 700,
+        "wires": [
+            [
+                "c2b0e8bc.42dd68"
+            ]
+        ]
+    },
+    {
+        "id": "c2b0e8bc.42dd68",
+        "type": "delay",
+        "z": "3a912c7a.731e7c",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "500",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 730,
+        "y": 560,
+        "wires": [
+            [
+                "85b74554.9af578"
+            ]
+        ]
+    }
+]
