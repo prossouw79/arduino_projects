@@ -1,53 +1,61 @@
 <h1> Telegram bot control for LED using Raspberry Pi, Arduino and Node-RED </h1>
 
 This project is a fun project intended for those new to Raspberry Pi, Arduino and/or electronics to build something that combines many real-world skills including:
+
 - Section 1 - Raspberry Pi:
   - Computer networking.
-  - Command line interfaces with Linux.
+  - Command line interface and package-management with Linux.
   - Introduction to server/client computing.
 - Section 2 - Arduino:
-  - Basic circuit design and logic using a breadboard.
+  - Basic circuit design and logic using a breadboard and dupont-jumpers.
   - Introduction to serial interfaces.
+  - Software dependencies.
 - Section 3 - Node-RED:
   - Introduction to systems-thinking and dataflow.
   - Integration of distinct systems.
 
-What this guide will help you build is a Telegram bot that allows you to control LED lights over the internet. This goal was chosen specifically to introduce integrated systems thinking - a skill that is required for anyone persuing Computer Science, Information Technology or Engineering fields.
+What this guide will help you build is a Telegram bot that allows you to control LED lights over the internet.
+
+<img src=".readme/telegram-bot-usage.gif" width="50%"/>
+
+This goal was chosen specifically to introduce integrated systems thinking - a skill that is required for anyone persuing Computer Science, Information Technology or Engineering fields.
 
 <h3>Table of contents:</h3>
 
 - [1. Raspberry Pi Setup](#1-raspberry-pi-setup)
-- [1.1 Write Raspian image](#11-write-raspian-image)
-- [1.2 Setup Raspberry Pi Networking and Interface](#12-setup-raspberry-pi-networking-and-interface)
-  - [1.2.1 Interfacing Option 1: Local keyboard, mouse and monitor/TV](#121-interfacing-option-1-local-keyboard-mouse-and-monitortv)
-  - [1.2.2 Interfacing Option 2: Headless](#122-interfacing-option-2-headless)
+  - [1.1 Write Raspian image](#11-write-raspian-image)
+  - [1.2 Setup Raspberry Pi Networking and Interface](#12-setup-raspberry-pi-networking-and-interface)
+    - [1.2.1 Interfacing Option 1: Local keyboard, mouse and monitor/TV](#121-interfacing-option-1-local-keyboard-mouse-and-monitortv)
+    - [1.2.2 Interfacing Option 2: Headless](#122-interfacing-option-2-headless)
   - [1.3 First boot](#13-first-boot)
 - [2. Arduino LED Control over serial](#2-arduino-led-control-over-serial)
   - [1.1 Circuit diagram](#11-circuit-diagram)
   - [1.2 Programming the Arduino](#12-programming-the-arduino)
-- [3. Setup NODE-RED  on Raspberry Pi](#3-setup-node-red--on-raspberry-pi)
-  - [2.1 Installing dependencies](#21-installing-dependencies)
-  - [2.2 Import flow ##](#22-import-flow-)
+- [3. Setup NODE-RED Telegram bot](#3-setup-node-red-telegram-bot)
+  - [3.1 Installing dependencies](#31-installing-dependencies)
+  - [3.2 Import flow](#32-import-flow)
+  - [3.3 Provide configuration](#33-provide-configuration)
+  - [3.4 Bonus: Add USB Webcam](#34-bonus-add-usb-webcam)
 
 # 1. Raspberry Pi Setup #
 
 The Raspberry Pi is an inexpensive single-board computer that provides the needed computing to be a Internet of Things (IoT) project. It will run a software server called `Node RED` that will form the software base for letting us connect our Arduino circuit to the internet. This section will guide you through setting up your Raspberry Pi with the Raspbian operating system.
 
-# 1.1 Write Raspian image #
+## 1.1 Write Raspian image ##
 Write the SD card of the Raspberry Pi using the [Raspberry Pi Imager](https://www.raspberrypi.org/software/):
 
 <img src=".readme/rpi-imager.gif" width="75%"/>
 
 This will take a while depending on your internet connection... grab a cup of coffee.
 
-# 1.2 Setup Raspberry Pi Networking and Interface #
+## 1.2 Setup Raspberry Pi Networking and Interface ##
 
 Once the Raspian image is written, you'll need to setup wireless networking for the Rasperry Pi and choose a means of interfacing with the Raspberry Pi. These are described in the following sections.
 
-## 1.2.1 Interfacing Option 1: Local keyboard, mouse and monitor/TV ##
+### 1.2.1 Interfacing Option 1: Local keyboard, mouse and monitor/TV ###
 This is the simplest interface - you plug in your keyboard and mouse into the USB ports on the Raspberry Pi, connect your monitor to the HDMI port and finally insert the SD card in the slot on the Raspberry Pi. You're good to go - power it on and you should boot into the interface. On first boot-up you will be presented with a wizard to guide you through the networking options including the Wi-Fi setup. Continue to [1.2.5](#125-finding-the-ip-address-of-your-raspberry-pi-on-the-network) once you have completed the wizard.
 
-## 1.2.2 Interfacing Option 2: Headless ##
+### 1.2.2 Interfacing Option 2: Headless ###
 If you don't have access to a spare keyboard, mouse or monitor - you'll need to use this option. Even if you have access, headless access is usually more convenient once set up. It'll allow you to control your Raspberry Pi without the need for these peripherals but will require network access to be available as soon as the Raspberry Pi starts. With an Ethernet cable this is simple but setting it up using Wi-Fi requires additional preparation before **before** inserting the SD card into the Raspberry Pi.
 
 After the SD card has been written, it will have a `boot` partition. In the root of this partition create a file called `wpa_supplicant.conf`. Create the file with [VSCode](https://code.visualstudio.com/download) and paste this content in the file:
@@ -168,64 +176,62 @@ You can program the microcontroller on the Arduino with multiple tools including
 - [PlatformIO](https://platformio.org/)
 - [Arduino IDE](https://www.arduino.cc/en/software)
 
-My preference is for PlatformIO but Arduino IDE can be used as well. Download [Visual Studio Code](https://code.visualstudio.com/download) and install the [PlatformIO](https://platformio.org/) plugin.
+The codebase is set up to be used with PlatformIO but Arduino IDE is more accessible for inexperienced users and will therefore be used in this guide.
 
-One part of the code that will be running on the Arduino is not in this codebase, it is published as a free `library` that will need to be imported for the code to function. 
+One part of the code that will be running on the Arduino is not in this codebase, it is published as a free `library` that will need to be imported for the code to function. To import this library in Arduino IDE, you can add the library by searching for it in the `Manage Libraries` entry under `Tools`:
 
-1. Add `ArduinoJSON` library:
- - <img src=".readme/libArduinoJSON.png" width="100%"/>
- - If you are using Arduino IDE, you can add the library by searching for it in the `Manage Libraries` entry under `Tools`. 
-2. Project Tasks:
- - `Build`, then `Upload and Monitor` <img src=".readme/build.png" width="100%"/>
- - If you are using Arduino IDE, copy the content of `src/main.cpp` and paste it into the editor.
-3. Type in Serial Window (input will be hidden):
-    ```json
-    //send 'red' over serial:
-    {"red":false,"orange":true,"green":true}
-    //send 'orange' over serial:
-    {"red":false,"orange":false,"green":true}
-    //send 'green' over serial:
-    {"red":false,"orange":false,"green":false}
-    //send 'red' over serial again:
-    {"red":true,"orange":false,"green":false}
-    //send 'on' over serial again:
-    {"red":true,"orange":true,"green":true}
-    //send 'off' over serial again:
-    {"red":false,"orange":false,"green":false}
-    ```
+<img src=".readme/arduinoJSON-install.gif" width="100%"/>
 
-# 3. Setup NODE-RED  on Raspberry Pi #
+Once the library is installed, we can import the code, compile it for our boad and test it on our microcontroller. The first step would be to select the board we are using, in my case the Arduino Uno, from the boards dropdown. Since this project is set up for PlatformIO, the code is using a `.cpp` file extension instead of the `.ino` extension the Arduino IDE uses for the C++ files. You can open the `./src/main.cpp` file in a text editor and simply copy-paste it into the Arduino IDE window:
 
-Node-RED is already installed on recent versions Raspbian, so start it up and open up the UI in a browser:
+<img src=".readme/arduino-ide-compile.gif" width="100%"/>
+
+Once you have it imported the code connect your Arduino using its USB (universal **serial** bus) cable. Click the upload button to send the compiled program to the microcontroller - you might be prompted to set a port e.g. `COM4` on Windows or `/dev/ttyACM0` on Linux.
+
+Now that the program is running on the microcontroller, we can communicate with it over the same serial connection using the Arduino IDE's `Serial Monitor`. 
+
+<img src=".readme/arduino-serial-comm.gif" width="100%"/>
+
+```json
+//send 'red' over serial:
+{"red":false,"orange":true,"green":true}
+//send 'orange' over serial:
+{"red":false,"orange":false,"green":true}
+//send 'green' over serial:
+{"red":false,"orange":false,"green":false}
+//send 'red' over serial again:
+{"red":true,"orange":false,"green":false}
+//send 'on' over serial:
+{"red":true,"orange":true,"green":true}
+//send 'off' over serial:
+{"red":false,"orange":false,"green":false}
+//sending any other text e.g. 'what':
+12:12:42.650 -> Error 1: No mapping for input: WHAT
+12:12:42.716 -> {"red":false,"orange":false,"green":false}
+```
+Congratulations, you have successfully programmed the Arduino's microcontroller to control its circuit using code that responds to serial input. Now that we have a basic interactive device, we can combine the electronics strengths of the Arduino with the computing strengths of the Raspberry Pi. You can now connect your **programmed** Arduino to your Raspberry Pi by plugging it into one of its USB ports.
+
+# 3. Setup NODE-RED Telegram bot #
+
+In [Section 1](#1-raspberry-pi-setup) we set up
+Node-RED on the Raspberry Pi and we can access it through a browser:
 
 <img src=".readme/node_red_blank.png" width="100%"/>
 
-## 2.1 Installing dependencies ##
+We can now import the Node RED flow (logic definition), but first we'll install some dependencies for our project. 
+
+## 3.1 Installing dependencies ##
 
 Before importing the flow, you'll need to import the following palette modules:
-1. [node-red-contrib-telegrambot](https://flows.nodered.org/node/node-red-contrib-telegrambot) - used to communicate with your telegram bot. 
-   - <img src=".readme/node_red_telegram_bot.png" width="25%"/>
-2. [node-red-contrib-rpi-imagecapture](https://flows.nodered.org/node/node-red-contrib-rpi-imagecapture) - used to capture an image using a webcam connected to the Raspberry Pi with USB. 
-   - <img src=".readme/node_red_image_capture.png" width="25%"/>
-3. [node-red-contrib-image-output](https://flows.nodered.org/node/node-red-contrib-image-output) - used to display the captured image in the flow for debugging purposes.
-   - <img src=".readme/node_red_image_preview.png" width="25%"/>
-
-For reference:  After installing all these packages through the UI, these were the versions of the libraries tested on a vanilla Raspbian build:
-```bash
-pi@raspberrypi:~/.node-red $ npm list --depth 0
-npm WARN npm npm does not support Node.js v10.21.0
-npm WARN npm You should probably upgrade to a newer version of node as we
-npm WARN npm cannot make any promises that npm will work with this version.
-npm WARN npm Supported releases of Node.js are the latest release of 4, 6, 7, 8, 9.
-npm WARN npm You can find the latest version at https://nodejs.org/
-node-red-project@0.0.1 /home/pi/.node-red
-├── node-red-contrib-image-output@0.6.2
-├── node-red-contrib-rpi-imagecapture@0.0.2
-└── node-red-contrib-telegrambot@8.9.6
-```
+1. [node-red-contrib-telegrambot](https://flows.nodered.org/node/node-red-contrib-telegrambot)
+2. [node-red-contrib-rpi-imagecapture](https://flows.nodered.org/node/node-red-contrib-rpi-imagecapture)
+3. [node-red-contrib-image-output](https://flows.nodered.org/node/node-red-contrib-image-output)
 
 
-## 2.2 Import flow ## 
+## 3.2 Import flow ##
+
+<img src=".readme/node-red-flow-import.gif" width="100%"/>
+
 In the top-right menu, select **import**:
 
 <img src=".readme/node_red_import.png" width="100%"/>
@@ -233,3 +239,39 @@ In the top-right menu, select **import**:
 Select the file `.node-red-flow/flows.json` and import it. The flow should resemble this:
 
 <img src=".readme/node_red_imported.png" width="100%"/>
+
+
+## 3.3 Provide configuration ##
+
+The last steps to tie it all together would be to:
+- Register a free Telegram bot. Use [this guide](https://www.process.st/telegram-bot/) and follow until you have your `API Token`. I called my bot `Arduino_LED_Monitor`. <img src=".readme/telegram-bot-register.png" width="100%"/>
+- Configure the Telegram Bot with your token:
+   <img src=".readme/node-red-telegram-token.gif" width="100%"/>
+- At this point you can `Deploy` your Node RED flow to activate it.
+  <img src=".readme/node-red-deploy.gif" width="100%"/>
+- Chat to the Telegram bot you created and send it commands:
+  - `/red` - toggles red LED.
+  - `/green` - toggles green LED.
+  - `/orange` - toggles orange LED.
+  - `/on` - turns all LEDs on.
+  - `/off` - turns all LEDs off.
+
+## 3.4 Bonus: Add USB Webcam ##
+When you send commands to your Telegram bot, the LEDs should toggle on and off on your command, but a person using the bot that cannot see the LEDs would never know. Using a USB webcam, we can take a picture of the breadboard and send it along every time they send a command. The flow is already configured to do this but we need a USB webcam - I'm using [the Microsoft LifeCam HD](https://www.microsoft.com/accessories/en-us/business/lifecam-hd-3000-for-business/t4h-00002) which works well. 
+
+We need to do some additional configuration on the Raspberry Pi over SSH
+
+```bash
+sudo apt install fswebcam -y
+
+echo 'device /dev/video0' > /home/pi/fswebcam.conf
+echo 'jpeg 90' >> /home/pi/fswebcam.conf
+echo 'no-overlay' >> /home/pi/fswebcam.conf
+echo 'no-banner' >> /home/pi/fswebcam.conf
+echo 'fps 15' >> /home/pi/fswebcam.conf
+echo 'skip 30' >> /home/pi/fswebcam.conf
+echo 'resolution 640x360' >> /home/pi/fswebcam.conf
+```
+
+Now if you send a command to the Telegram Bot, you should get a photo with each change:
+<img src=".readme/telegram-bot-usage.gif" width="50%"/>

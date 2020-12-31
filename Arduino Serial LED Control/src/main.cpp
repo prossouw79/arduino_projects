@@ -1,14 +1,17 @@
 #include <Arduino.h>
 #include <ArduinoJson.h> //https://arduinojson.org/
 
+// Store pin information, adapt to the PWM pins used on the Arduino.
 const int redPin = 8;
 const int orangePin = 9;
 const int greenPin = 10;
 
+// Store the current state of LEDs
 bool redState = false;
 bool orangeState = false;
 bool greenState = false;
 
+// Method to turn all LEDs off
 void allOff()
 {
   digitalWrite(redPin, LOW);
@@ -19,6 +22,7 @@ void allOff()
   greenState = false;
 }
 
+// Method to turn all LEDs on
 void allOn()
 {
   digitalWrite(redPin, HIGH);
@@ -29,6 +33,7 @@ void allOn()
   greenState = true;
 }
 
+// Method to toggle a pin
 void toggle(int pin)
 {
   switch (pin)
@@ -70,6 +75,7 @@ void toggle(int pin)
   }
 }
 
+// the setup code that sets up pins, runs once when the board is powered on
 void setup()
 {
   Serial.begin(9600); // opens serial port, sets data rate to 9600 bps
@@ -77,6 +83,8 @@ void setup()
   pinMode(orangePin, OUTPUT);
   pinMode(greenPin, OUTPUT);
   allOn();
+  delay(1000);
+  allOff();
 }
 
 void loop()
@@ -112,4 +120,5 @@ void loop()
     serializeJson(doc, Serial);
     Serial.println(); //important
   }
+  delay(100);
 }
