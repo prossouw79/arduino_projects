@@ -7,23 +7,23 @@ This project is a fun project intended for those new to Raspberry Pi, Arduino an
   - Command line interface and package-management with Linux.
   - Introduction to server/client computing.
 - Section 2 - Arduino:
-  - Basic circuit design and logic using a breadboard and dupont-jumpers.
+  - Basic circuit design and logic using a breadboard and Dupont jumpers.
   - Introduction to serial interfaces.
   - Software dependencies.
 - Section 3 - Node-RED:
-  - Introduction to systems-thinking and dataflow.
+  - Introduction to systems-thinking and data-flow.
   - Integration of distinct systems.
 
 What this guide will help you build is a Telegram bot that allows you to control LED lights over the internet.
 
 <img src=".readme/telegram-bot-usage.gif" width="50%"/>
 
-This goal was chosen specifically to introduce integrated systems thinking - a skill that is required for anyone persuing Computer Science, Information Technology or Engineering fields.
+This goal was chosen specifically to introduce integrated systems thinking - a skill that is required for anyone pursuing Computer Science, Information Technology or Engineering fields.
 
 <h3>Table of contents:</h3>
 
 - [1. Raspberry Pi Setup](#1-raspberry-pi-setup)
-  - [1.1 Write Raspian image](#11-write-raspian-image)
+  - [1.1 Write Raspbian image](#11-write-raspbian-image)
   - [1.2 Setup Raspberry Pi Networking and Interface](#12-setup-raspberry-pi-networking-and-interface)
     - [1.2.1 Interfacing Option 1: Local keyboard, mouse and monitor/TV](#121-interfacing-option-1-local-keyboard-mouse-and-monitortv)
     - [1.2.2 Interfacing Option 2: Headless](#122-interfacing-option-2-headless)
@@ -39,9 +39,9 @@ This goal was chosen specifically to introduce integrated systems thinking - a s
 
 # 1. Raspberry Pi Setup #
 
-The Raspberry Pi is an inexpensive single-board computer that provides the needed computing to be a Internet of Things (IoT) project. It will run a software server called `Node RED` that will form the software base for letting us connect our Arduino circuit to the internet. This section will guide you through setting up your Raspberry Pi with the Raspbian operating system.
+The Raspberry Pi is an inexpensive single-board computer that provides the needed computing to be a Internet of Things (IoT) project. It will run a software server called Node RED that will form the software base for letting us connect our Arduino circuit to the internet. This section will guide you through setting up your Raspberry Pi with the Raspbian operating system.
 
-## 1.1 Write Raspian image ##
+## 1.1 Write Raspbian image ##
 Write the SD card of the Raspberry Pi using the [Raspberry Pi Imager](https://www.raspberrypi.org/software/):
 
 <img src=".readme/rpi-imager.gif" width="75%"/>
@@ -50,15 +50,15 @@ This will take a while depending on your internet connection... grab a cup of co
 
 ## 1.2 Setup Raspberry Pi Networking and Interface ##
 
-Once the Raspian image is written, you'll need to setup wireless networking for the Rasperry Pi and choose a means of interfacing with the Raspberry Pi. These are described in the following sections.
+Once the Raspbian image is written, you'll need to setup wireless networking for the Raspberry Pi and choose a means of interfacing with the Raspberry Pi. These are described in the following sections.
 
 ### 1.2.1 Interfacing Option 1: Local keyboard, mouse and monitor/TV ###
-This is the simplest interface - you plug in your keyboard and mouse into the USB ports on the Raspberry Pi, connect your monitor to the HDMI port and finally insert the SD card in the slot on the Raspberry Pi. You're good to go - power it on and you should boot into the interface. On first boot-up you will be presented with a wizard to guide you through the networking options including the Wi-Fi setup. Continue to [1.2.5](#125-finding-the-ip-address-of-your-raspberry-pi-on-the-network) once you have completed the wizard.
+This is the simplest interface - you plug in your keyboard and mouse into the USB ports on the Raspberry Pi, connect your monitor to the HDMI port and finally insert the SD card in the slot on the Raspberry Pi. You're good to go - power it on and you should boot into the interface. On first boot-up you will be presented with a wizard to guide you through the networking options including the WiFi setup.
 
 ### 1.2.2 Interfacing Option 2: Headless ###
-If you don't have access to a spare keyboard, mouse or monitor - you'll need to use this option. Even if you have access, headless access is usually more convenient once set up. It'll allow you to control your Raspberry Pi without the need for these peripherals but will require network access to be available as soon as the Raspberry Pi starts. With an Ethernet cable this is simple but setting it up using Wi-Fi requires additional preparation before **before** inserting the SD card into the Raspberry Pi.
+If you don't have access to a spare keyboard, mouse or monitor - you'll need to use this option. Even if you have access, headless access is usually more convenient once set up. It'll allow you to control your Raspberry Pi without the need for these peripherals but will require network access to be available as soon as the Raspberry Pi starts. With an Ethernet cable this is simple but setting it up using WiFi requires additional preparation before **before** inserting the SD card into the Raspberry Pi.
 
-After the SD card has been written, it will have a `boot` partition. In the root of this partition create a file called `wpa_supplicant.conf`. Create the file with [VSCode](https://code.visualstudio.com/download) and paste this content in the file:
+After the SD card has been written, it will have a **boot** partition. In the root of this partition create a file called `wpa_supplicant.conf`. Create the file with [VSCode](https://code.visualstudio.com/download) and paste this content in the file:
 ```bash
 ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
 update_config=1
@@ -72,15 +72,15 @@ network={
 
 You'll also need to enable [SSH](https://en.wikipedia.org/wiki/SSH_(Secure_Shell)) by creating another file called `ssh` in the same root directory. This file is empty.
 
-You can now power up your Raspberry Pi. It can take a couple of minutes for the Raspberry Pi to start up and connect to your network. You'll need to find the `IP address` of your Pi on the network so you can connect to it. I use an Android app called `Fing` to scan my network for devices. While your phone is connected to the same network as your Raspberry Pi, run the scan to find the IP address:
+You can now power up your Raspberry Pi. It can take a couple of minutes for the Raspberry Pi to start up and connect to your network. You'll need to find the **IP address** of your Pi on the network so you can connect to it. I use an Android app called **Fing** to scan my network for devices. While your phone is connected to the same network as your Raspberry Pi, run the scan to find the IP address:
 
 <img src=".readme/fing.png" width="50%"/>
 
-The app reveals that the IP address assigned to the Raspberry Pi is `192.168.10.21`. Note down the IP assigned by your router, it'll most likely be different from mine and you'll need it at several points in the guide.
+The app reveals that the IP address assigned to the Raspberry Pi is **192.168.10.21**. Note down the IP assigned by your router, it'll most likely be different from mine and you'll need it at several points in the guide.
 
 ## 1.3 First boot ##
 
-With a first boot on the Raspberry Pi, there will be some configuration to do. If you have local access to the Raspberry Pi, a wizard will guide you through the process. If you have set up your Raspberry Pi in `headless` mode, you should do this configuration over `SSH`. Log in to the Raspberry Pi with a `command prompt` window:
+With a first boot on the Raspberry Pi, there will be some configuration to do. If you have local access to the Raspberry Pi, a wizard will guide you through the process. If you have set up your Raspberry Pi in **headless** mode, you should do this configuration over **SSH**. Log in to the Raspberry Pi with a command prompt window:
 
 ```bash
 ssh pi@<IP of Pi on your network>
@@ -114,7 +114,7 @@ On first boot, it is advisable to:
 - Change the default password
 - Enable VNC access
 - Set the display resolution - needed for VNC connections if no display is physically connected to the Pi.
-- Set the timezone
+- Set the time-zone
 - Set the system locale
 ```bash
 sudo raspi-config
@@ -131,11 +131,11 @@ sudo apt update
 sudo apt upgrade -y
 ```
 
-We can now connect to the Raspberry Pi in another way: VNC. This will give us a more visual interface if you aren't very comfortable with SSH. Download the [RealVNC Viewer](https://www.realvnc.com/en/connect/download/viewer) client and install it. Once installed, you can connect to your running Raspberry Pi using the same combination of `IP address`, `username` and `password` used for SSH:
+We can now connect to the Raspberry Pi in another way: VNC. This will give us a more visual interface if you aren't very comfortable with SSH. Download the [RealVNC Viewer](https://www.realvnc.com/en/connect/download/viewer) client and install it. Once installed, you can connect to your running Raspberry Pi using the same combination of **IP address**, **username** and **password** used for SSH:
 
 <img src=".readme/vnc-connection.gif" width="75%"/>
 
-This will give you the same interface to your Pi as users running in a local interface. Once it is running, you can start `Node RED`. Depending on the image you flashed to the SD card, it might already be installed. If you don't have it installed (and your previous `apt upgrade` command has finished) you can install it easily from `Recommended Software` in the `Programming`:
+This will give you the same interface to your Pi as users running in a local interface. Once it is running, you can start **Node RED**. Depending on the image you flashed to the SD card, it might already be installed. If you don't have it installed (and your previous `apt upgrade` command has finished) you can install it easily from **Recommended Software**:
 
 <img src=".readme/install-node-red.gif" width="75%"/>
 
@@ -143,12 +143,12 @@ This will also take long if you have a slow SD card like I do... don't cheap out
 
 <img src=".readme/install-node-red-complete.gif" width="75%"/>
 
-Now that `Node-RED` is installed, simplify things by enabling its service so it starts up automatically when your Raspberry Pi starts up. Over ssh, run:
+Now that **Node-RED** is installed, simplify things by enabling its service so it starts up automatically when your Raspberry Pi starts up. Over ssh, run:
 ```bash
 sudo systemctl enable nodered.service
 sudo reboot
 ```
-Once your Pi starts up again, the service will start the Node-RED server and you can connect to the it by connecting to `http://<IP of your raspberry pi>:1880` from any computer on the same network:
+Once your Pi starts up again, the service will start the Node-RED server and you can connect to the it by connecting to **http://<IP of your raspberry pi>:1880** from any computer on the same network:
 
 <img src=".readme/node-red-firefox.gif" width="75%"/>
 
@@ -156,7 +156,7 @@ Congratulations, you now have a functional Raspberry Pi server running Node RED!
 
 # 2. Arduino LED Control over serial #
 
-Whereas the Raspberry Pi used in the first section represents a high-level system akin to a computer, the Arduino represents a low-level system akin to a digital radio. Where the Raspberry Pi uses a microprocessor with multiple cores, a large memory pool and a high clockspeed; the Arduino uses a microcontroller that has a lot less computing power but also uses a fraction of the electricity and is well-suited to electronics rather than general computing. We'll use the strengths of both in this project.
+Whereas the Raspberry Pi used in the first section represents a high-level system akin to a computer, the Arduino represents a low-level system akin to a digital radio. Where the Raspberry Pi uses a microprocessor with multiple cores, a large memory pool and a high clockspeed; the Arduino uses a micro-controller that has a lot less computing power but also uses a fraction of the electricity and is well-suited to electronics rather than general computing. We'll use the strengths of both in this project.
 
 ## 1.1 Circuit diagram ##
 Using the Arduino, LEDs, resistors, breadboard and dupont jumpers, create the following circuit (or logical equivalent).
@@ -176,19 +176,19 @@ You can program the microcontroller on the Arduino with multiple tools including
 - [PlatformIO](https://platformio.org/)
 - [Arduino IDE](https://www.arduino.cc/en/software)
 
-The codebase is set up to be used with PlatformIO but Arduino IDE is more accessible for inexperienced users and will therefore be used in this guide.
+The code-base is set up to be used with PlatformIO but Arduino IDE is more accessible for inexperienced users and will therefore be used in this guide.
 
-One part of the code that will be running on the Arduino is not in this codebase, it is published as a free `library` that will need to be imported for the code to function. To import this library in Arduino IDE, you can add the library by searching for it in the `Manage Libraries` entry under `Tools`:
+One part of the code that will be running on the Arduino is not in this code-base, it is published as a free library that will need to be imported for the code to function. To import this library in Arduino IDE, you can add the library by searching for it in the **Manage Libraries** entry under **Tools**:
 
 <img src=".readme/arduinoJSON-install.gif" width="100%"/>
 
-Once the library is installed, we can import the code, compile it for our boad and test it on our microcontroller. The first step would be to select the board we are using, in my case the Arduino Uno, from the boards dropdown. Since this project is set up for PlatformIO, the code is using a `.cpp` file extension instead of the `.ino` extension the Arduino IDE uses for the C++ files. You can open the `./src/main.cpp` file in a text editor and simply copy-paste it into the Arduino IDE window:
+Once the library is installed, we can import the code, compile it for our board and test it on our micro-controller. The first step would be to select the board we are using, in my case the Arduino UNO, from the boards drop-down. Since this project is set up for PlatformIO, the code is using a `.cpp` file extension instead of the `.ino` extension the Arduino IDE uses for the C++ files. You can open the `./src/main.cpp` file in a text editor and simply copy-paste it into the Arduino IDE window:
 
 <img src=".readme/arduino-ide-compile.gif" width="100%"/>
 
-Once you have it imported the code connect your Arduino using its USB (universal **serial** bus) cable. Click the upload button to send the compiled program to the microcontroller - you might be prompted to set a port e.g. `COM4` on Windows or `/dev/ttyACM0` on Linux.
+Once you have it imported the code connect your Arduino using its USB (universal **serial** bus) cable. Click the upload button to send the compiled program to the micro-controller - you might be prompted to set a port e.g. `COM4` on Windows or `/dev/ttyACM0` on Linux.
 
-Now that the program is running on the microcontroller, we can communicate with it over the same serial connection using the Arduino IDE's `Serial Monitor`. 
+Now that the program is running on the micro-controller, we can communicate with it over the same serial connection using the Arduino IDE's **Serial Monitor**. 
 
 <img src=".readme/arduino-serial-comm.gif" width="100%"/>
 
@@ -244,7 +244,7 @@ Select the file `.node-red-flow/flows.json` and import it. The flow should resem
 ## 3.3 Provide configuration ##
 
 The last steps to tie it all together would be to:
-- Register a free Telegram bot. Use [this guide](https://www.process.st/telegram-bot/) and follow until you have your `API Token`. I called my bot `Arduino_LED_Monitor`. <img src=".readme/telegram-bot-register.png" width="100%"/>
+- Register a free Telegram bot. Use [this guide](https://www.process.st/telegram-bot/) and follow until you have your **API Token**. I called my bot **Arduino_LED_Monitor**. <img src=".readme/telegram-bot-register.png" width="100%"/>
 - Configure the Telegram Bot with your token:
    <img src=".readme/node-red-telegram-token.gif" width="100%"/>
 - At this point you can `Deploy` your Node RED flow to activate it.
