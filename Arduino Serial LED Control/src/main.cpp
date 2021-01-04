@@ -10,6 +10,7 @@ const int greenPin = 10;
 bool redState = false;
 bool orangeState = false;
 bool greenState = false;
+bool blinkingState = false;
 
 // Method to turn all LEDs off
 void allOff()
@@ -31,6 +32,14 @@ void allOn()
   orangeState = true;
   digitalWrite(greenPin, HIGH);
   greenState = true;
+}
+
+// Method to blink all LEDS
+void blinkOn()
+{
+  allOff();
+  delay(1000);
+  allOn();
 }
 
 // Method to toggle a pin
@@ -82,9 +91,6 @@ void setup()
   pinMode(redPin, OUTPUT);
   pinMode(orangePin, OUTPUT);
   pinMode(greenPin, OUTPUT);
-  allOn();
-  delay(1000);
-  allOff();
 }
 
 void loop()
@@ -106,6 +112,12 @@ void loop()
       allOff();
     else if (input.equals("ON"))
       allOn();
+    else if (input.equals("BLINKON")){
+      allOff();
+      blinkingState = true;
+    }
+    else if (input.equals("BLINKOFF"))
+      blinkingState = false;
     else
       Serial.println("Error 1: No mapping for input: " + input);
 
@@ -119,6 +131,10 @@ void loop()
     // Generate the minified JSON and send it to the Serial port.
     serializeJson(doc, Serial);
     Serial.println(); //important
+  }
+
+  if(blinkingState){
+    blinkOn();
   }
   delay(100);
 }

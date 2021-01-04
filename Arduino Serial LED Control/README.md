@@ -16,7 +16,7 @@ This project is a fun project intended for those new to Raspberry Pi, Arduino an
 
 What this guide will help you build is a Telegram bot that allows you to control LED lights over the internet.
 
-<img src=".readme/telegram-bot-usage.gif" width="50%"/>
+<img src=".readme/telegram-bot-usage.gif" width="100%"/>
 
 This goal was chosen specifically to introduce integrated systems thinking - a skill that is required for anyone pursuing Computer Science, Information Technology or Engineering fields.
 
@@ -56,7 +56,7 @@ Once the Raspbian image is written, you'll need to setup wireless networking for
 This is the simplest interface - you plug in your keyboard and mouse into the USB ports on the Raspberry Pi, connect your monitor to the HDMI port and finally insert the SD card in the slot on the Raspberry Pi. You're good to go - power it on and you should boot into the interface. On first boot-up you will be presented with a wizard to guide you through the networking options including the WiFi setup.
 
 ### 1.2.2 Interfacing Option 2: Headless ###
-If you don't have access to a spare keyboard, mouse or monitor - you'll need to use this option. Even if you have access, headless access is usually more convenient once set up. It'll allow you to control your Raspberry Pi without the need for these peripherals but will require network access to be available as soon as the Raspberry Pi starts. With an Ethernet cable this is simple but setting it up using WiFi requires additional preparation before **before** inserting the SD card into the Raspberry Pi.
+If you don't have access to a spare keyboard, mouse or monitor - you'll need to use this option. Even if you have access, headless access is usually more convenient once set up. It'll allow you to control your Raspberry Pi without the need for these peripherals but will require network access to be available as soon as the Raspberry Pi starts. With an Ethernet cable this is simple but setting it up using WiFi requires additional preparation **before** inserting the SD card into the Raspberry Pi.
 
 After the SD card has been written, it will have a **boot** partition. In the root of this partition create a file called `wpa_supplicant.conf`. Create the file with [VSCode](https://code.visualstudio.com/download) and paste this content in the file:
 ```bash
@@ -70,7 +70,7 @@ network={
 }
 ```
 
-You'll also need to enable [SSH](https://en.wikipedia.org/wiki/SSH_(Secure_Shell)) by creating another file called `ssh` in the same root directory. This file is empty.
+You'll also need to enable [SSH](https://en.wikipedia.org/wiki/SSH_(Secure_Shell)) by creating another file called `ssh` in the same root directory. This file is empty. Eject the SD card and insert it into the Raspberry Pi.
 
 You can now power up your Raspberry Pi. It can take a couple of minutes for the Raspberry Pi to start up and connect to your network. You'll need to find the **IP address** of your Pi on the network so you can connect to it. I use an Android app called **Fing** to scan my network for devices. While your phone is connected to the same network as your Raspberry Pi, run the scan to find the IP address:
 
@@ -112,10 +112,8 @@ This is a security risk - please login as the 'pi' user and type 'passwd' to set
 
 On first boot, it is advisable to:
 - Change the default password
-- Enable VNC access
-- Set the display resolution - needed for VNC connections if no display is physically connected to the Pi.
-- Set the time-zone
-- Set the system locale
+- Enable [VNC access](https://en.wikipedia.org/wiki/Virtual_Network_Computing) - Under Interface
+- Set the display resolution to 1920x1080 - needed for VNC connections if no display is physically connected to the Pi.
 ```bash
 sudo raspi-config
 # Use Arrow-Keys and Tab to navigate, Space-bar and Enter to select or confirm. 
@@ -143,12 +141,13 @@ This will also take long if you have a slow SD card like I do... don't cheap out
 
 <img src=".readme/install-node-red-complete.gif" width="75%"/>
 
-Now that **Node-RED** is installed, simplify things by enabling its service so it starts up automatically when your Raspberry Pi starts up. Over ssh, run:
+Now that **Node-RED** is installed, simplify things by enabling its service so it starts up automatically when your Raspberry Pi starts up. The **pi** user also needs to be allowed to make serial connections by adding it to the **dialout** group. These changes will be effective after a reboot. Over SSH, run:
 ```bash
 sudo systemctl enable nodered.service
+sudo usermod -aG dialout pi
 sudo reboot
 ```
-Once your Pi starts up again, the service will start the Node-RED server and you can connect to the it by connecting to **http://<IP of your raspberry pi>:1880** from any computer on the same network:
+Once your Pi starts up again, the service will start the Node-RED server and you can connect to it by connecting to **http://<IP of your raspberry pi>:1880** from any computer on the same network:
 
 <img src=".readme/node-red-firefox.gif" width="75%"/>
 
@@ -247,6 +246,7 @@ The last steps to tie it all together would be to:
 - Register a free Telegram bot. Use [this guide](https://www.process.st/telegram-bot/) and follow until you have your **API Token**. I called my bot **Arduino_LED_Monitor**. <img src=".readme/telegram-bot-register.png" width="100%"/>
 - Configure the Telegram Bot with your token:
    <img src=".readme/node-red-telegram-token.gif" width="100%"/>
+- In order to communicate over a serial connection with the Arduino, the serial configuration node needs to be updated. Remember to match the baud-rate of the Serial connection (typically 9600) when updating this configuration.
 - At this point you can `Deploy` your Node RED flow to activate it.
   <img src=".readme/node-red-deploy.gif" width="100%"/>
 - Chat to the Telegram bot you created and send it commands:
