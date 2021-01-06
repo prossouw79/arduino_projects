@@ -17,12 +17,21 @@ MqttClient mqttClient(wifiClient);
 
 const char broker[] = "192.168.10.250";
 int        port     = 1883;
-const char topic[]  = "analogRead";
-const long interval = 10000;
-unsigned long previousMillis = 0;
+const char topic_publish[]  = "analogRead";
+const char topic_subscribe[]  = "analogReadInterval";
+
+const int default_interval = 10000;
+int interval = default_interval;
+
+DynamicJsonDocument doc(500);
+
 float analogueValues[] = {0, 0, 0, 0, 0, 0};
 int calibrationWet = 327;
 int calibrationDry = 588;
+
+String json;
+unsigned long currentMillis;
+long timeElapsed = 0;
 
 void setup() {
   //Initialize serial and wait for port to open:
@@ -61,48 +70,74 @@ void setup() {
   }
 
   Serial.println("You're connected to the MQTT broker!");
+  Serial.print("Further logging will be to:");
+  Serial.println(topic_log);
+
+  Serial.print("Subscribing to topic: ");
+  Serial.println(topic_subscribe);
   Serial.println();
+
+  // subscribe to a topic
+  mqttClient.subscribe(topic_subscribe);
 }
 
 void loop() {
   // call poll() regularly to allow the library to send MQTT keep alives which
   // avoids being disconnected by the broker
   mqttClient.poll();
+  if (interval < 1000) {
+    Serial.print("Interval was set below 1000: ");
+    Serial.println(interval);
 
-  // avoid having delays in loop, we'll use the strategy from BlinkWithoutDelay
-  // see: File -> Examples -> 02.Digital -> BlinkWithoutDelay for more info
-  unsigned long currentMillis = millis();
-  if (currentMillis - previousMillis >= interval) {
-
-    // save the last time a message was sent
-    previousMillis = currentMillis;
-
-    DynamicJsonDocument doc(500);
-
-    // Add values in the document 
-    analogueValues[0] = map(analogRead(A0),calibrationDry,calibrationWet,0,100);
-    analogueValues[1] = map(analogRead(A1),calibrationDry,calibrationWet,0,100);
-    analogueValues[2] = map(analogRead(A2),calibrationDry,calibrationWet,0,100);
-    analogueValues[3] = map(analogRead(A3),calibrationDry,calibrationWet,0,100);
-    analogueValues[4] = map(analogRead(A4),calibrationDry,calibrationWet,0,100);
-    analogueValues[5] = map(analogRead(A5),calibrationDry,calibrationWet,0,100);    
-
-    doc["A0"] = analogueValues[0];
-    doc["A1"] = analogueValues[1];
-    doc["A2"] = analogueValues[2];
-    doc["A3"] = analogueValues[3];
-    doc["A4"] = analogueValues[4];
-    doc["A5"] = analogueValues[5];
-
-
-    String json;
-    serializeJson(doc, json);
-
-    // send message, the Print interface can be used to set the message contents
-    mqttClient.beginMessage(topic);
-    mqttClient.print(json);
-    mqttClient.endMessage();
-
-    Serial.println(json);
+    Serial.print("Resetting to default interval:");
+    Serial.println(default_interval);
+    interval = default_interval;
   }
+
+  int messageSize = mqttClient.parseMessage();
+  if (messageSize) {
+    // use the Stream interface to print the contents
+    char messageArray[messageSize];
+    int offset = 0;
+    while (mqttClient.available()) {
+      char c = (char)mqttClient.read();
+      messageArray[offset++] = c;
+    }
+    messageArray[messageSize] = '\0';
+    int n = atoi(messageArray);
+    if (n >= 1000) {
+      interval = n;
+    } else {
+      interval = default_interval;
+    }
+    Serial.print("Interval set to: ");
+    Serial.println(interval);
+  }
+
+  // Add values in the json document
+  analogueValues[0] = map(analogRead(A0), calibrationDry, calibrationWet, 0, 100);
+  analogueValues[1] = map(analogRead(A1), calibrationDry, calibrationWet, 0, 100);
+  analogueValues[2] = map(analogRead(A2), calibrationDry, calibrationWet, 0, 100);
+  analogueValues[3] = map(analogRead(A3), calibrationDry, calibrationWet, 0, 100);
+  analogueValues[4] = map(analogRead(A4), calibrationDry, calibrationWet, 0, 100);
+  analogueValues[5] = map(analogRead(A5), calibrationDry, calibrationWet, 0, 100);
+
+  doc["A0"] = analogueValues[0];
+  doc["A1"] = analogueValues[1];
+  doc["A2"] = analogueValues[2];
+  doc["A3"] = analogueValues[3];
+  doc["A4"] = analogueValues[4];
+  doc["A5"] = analogueValues[5];
+  doc["interval"] = interval;
+
+  json = "";
+  serializeJson(doc, json);
+
+  // send message, the Print interface can be used to set the message contents
+  mqttClient.beginMessage(topic_publish);
+  mqttClient.print(json);
+  mqttClient.endMessage();
+
+  Serial.println(json);
+  delay(interval);
 }
