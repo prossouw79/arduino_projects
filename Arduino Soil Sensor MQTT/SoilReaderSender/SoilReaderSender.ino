@@ -2,36 +2,48 @@
 #include <ArduinoMqttClient.h>
 #include <WiFiNINA.h>
 #include "arduino_secrets.h"
+#include "DHT.h"
+
+#define plant_1_analog_pin A0
+#define plant_2_analog_pin A1
+#define plant_3_analog_pin A2
+#define plant_4_analog_pin A3
+#define plant_5_analog_pin A4
+
+#define DHTPIN 7        // digital pin
 
 // Remember to create a file "arduino_secrets.h" in the same folder as this code.
-// Add the following 2 lines:
-// #define SECRET_SSID "YOURWIFISSID"
-// #define SECRET_PASS "YOURWIFIPASSWORD"
+// Add the following lines:
+//#define SECRET_SSID "YOURSSID"
+//#define SECRET_PASS "YOURPASSWD"
+//#define SECRET_BROKER "YOURBROKER"
+//#define SECRET_BROKER_PORT YOURBROKERPORTNUMBER
+//#define SECRET_TOPIC_PUBLISH "YOURPUBTOPIC"
+//#define SECRET_TOPIC_SUBSCRIBE "YOURSUBTOPIC"
 
-///////please enter your sensitive data in the Secret tab/arduino_secrets.h
-char ssid[] = SECRET_SSID;        // your network SSID (name)
-char pass[] = SECRET_PASS;    // your network password (use for WPA, or use as key for WEP)
+#define DHTTYPE DHT11   // DHT 11 
+//#define DHTTYPE DHT22   // DHT 22  (AM2302)
+//#define DHTTYPE DHT21   // DHT 21 (AM2301)
+
+DHT dht(DHTPIN, DHTTYPE);
+
+const char ssid[] = SECRET_SSID;
+const char pass[] = SECRET_PASS;
+const char broker[] = SECRET_BROKER;
+const int port = SECRET_BROKER_PORT;
+const char topic_publish[]  = SECRET_TOPIC_PUBLISH;
+const char topic_subscribe[]  = SECRET_TOPIC_SUBSCRIBE;
 
 WiFiClient wifiClient;
 MqttClient mqttClient(wifiClient);
 
-const char broker[] = "192.168.10.250";
-int        port     = 1883;
-const char topic_publish[]  = "analogRead";
-const char topic_subscribe[]  = "analogReadInterval";
 
-const int default_interval = 10000;
-int interval = default_interval;
-
-DynamicJsonDocument doc(500);
-
+//Dynamic variables
 float analogueValues[] = {0, 0, 0, 0, 0, 0};
-int calibrationWet = 327;
-int calibrationDry = 588;
-
+DynamicJsonDocument doc(2048);
 String json;
 unsigned long currentMillis;
-long timeElapsed = 0;
+unsigned long timeElapsed = 0;
 
 void setup() {
   //Initialize serial and wait for port to open:
@@ -52,6 +64,9 @@ void setup() {
   Serial.println("You're connected to the network");
   Serial.println();
 
+  // Initialize DHT sensor
+  dht.begin();
+
   // You can provide a unique client ID, if not set the library uses Arduino-millis()
   // Each client must have a unique client ID
   // mqttClient.setId("clientId");
@@ -70,8 +85,6 @@ void setup() {
   }
 
   Serial.println("You're connected to the MQTT broker!");
-  Serial.print("Further logging will be to:");
-  Serial.println(topic_log);
 
   Serial.print("Subscribing to topic: ");
   Serial.println(topic_subscribe);
@@ -82,62 +95,52 @@ void setup() {
 }
 
 void loop() {
+  mqttClient.poll();
+
+  // Reading temperature or humidity takes about 250 milliseconds!
+  // Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
+  float h = dht.readHumidity();
+  // Read temperature as Celsius
+  float t = dht.readTemperature();
+  // Read temperature as Fahrenheit
+  float f = dht.readTemperature(true);
+
+  // Check if any reads failed and exit early (to try again).
+  if (isnan(h) || isnan(t) || isnan(f)) {
+    Serial.println("Failed to read from DHT sensor!");
+    delay(1000);
+    return;
+  }
+
+  // Compute heat index
+  // Must send in temp in Fahrenheit!
+  float hi = dht.computeHeatIndex(f, h);
+
+  doc["HP"] = h;
+  doc["TC"] = t;
+  doc["TF"] = f;
+  doc["HI"] = hi;
+
+
   // call poll() regularly to allow the library to send MQTT keep alives which
   // avoids being disconnected by the broker
-  mqttClient.poll();
-  if (interval < 1000) {
-    Serial.print("Interval was set below 1000: ");
-    Serial.println(interval);
 
-    Serial.print("Resetting to default interval:");
-    Serial.println(default_interval);
-    interval = default_interval;
-  }
-
-  int messageSize = mqttClient.parseMessage();
-  if (messageSize) {
-    // use the Stream interface to print the contents
-    char messageArray[messageSize];
-    int offset = 0;
-    while (mqttClient.available()) {
-      char c = (char)mqttClient.read();
-      messageArray[offset++] = c;
-    }
-    messageArray[messageSize] = '\0';
-    int n = atoi(messageArray);
-    if (n >= 1000) {
-      interval = n;
-    } else {
-      interval = default_interval;
-    }
-    Serial.print("Interval set to: ");
-    Serial.println(interval);
-  }
-
-  // Add values in the json document
-  analogueValues[0] = map(analogRead(A0), calibrationDry, calibrationWet, 0, 100);
-  analogueValues[1] = map(analogRead(A1), calibrationDry, calibrationWet, 0, 100);
-  analogueValues[2] = map(analogRead(A2), calibrationDry, calibrationWet, 0, 100);
-  analogueValues[3] = map(analogRead(A3), calibrationDry, calibrationWet, 0, 100);
-  analogueValues[4] = map(analogRead(A4), calibrationDry, calibrationWet, 0, 100);
-  analogueValues[5] = map(analogRead(A5), calibrationDry, calibrationWet, 0, 100);
-
-  doc["A0"] = analogueValues[0];
-  doc["A1"] = analogueValues[1];
-  doc["A2"] = analogueValues[2];
-  doc["A3"] = analogueValues[3];
-  doc["A4"] = analogueValues[4];
-  doc["A5"] = analogueValues[5];
-  doc["interval"] = interval;
+  doc["A0"] = analogRead(A0);
+  doc["A1"] = analogRead(A1);
+  doc["A2"] = analogRead(A2);
+  doc["A3"] = analogRead(A3);
+  doc["A4"] = analogRead(A4);
+  doc["A5"] = analogRead(A5);
 
   json = "";
   serializeJson(doc, json);
+
+  Serial.println(json);
 
   // send message, the Print interface can be used to set the message contents
   mqttClient.beginMessage(topic_publish);
   mqttClient.print(json);
   mqttClient.endMessage();
 
-  Serial.println(json);
-  delay(interval);
+  delay(2000);
 }
