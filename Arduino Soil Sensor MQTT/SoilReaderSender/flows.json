@@ -7,16 +7,9 @@
         "info": ""
     },
     {
-        "id": "59906611.8f5d48",
+        "id": "c742ded6.a2c3d",
         "type": "tab",
-        "label": "A0 Messages",
-        "disabled": false,
-        "info": ""
-    },
-    {
-        "id": "97a3a467.80c6c",
-        "type": "tab",
-        "label": "DHT11 Sensor Messages",
+        "label": "Telegram Bot",
         "disabled": false,
         "info": ""
     },
@@ -153,7 +146,7 @@
         "type": "ui_group",
         "name": "Seiju Elm",
         "tab": "b6aa4173.bff59",
-        "order": 1,
+        "order": 2,
         "disp": true,
         "width": "6",
         "collapse": true
@@ -172,20 +165,92 @@
         "id": "a23d5a99.c03468",
         "type": "ui_group",
         "name": "Environment",
-        "tab": "83973585.946858",
-        "order": 2,
+        "tab": "b6aa4173.bff59",
+        "order": 1,
         "disp": true,
         "width": "6",
         "collapse": true
     },
     {
-        "id": "83973585.946858",
-        "type": "ui_tab",
-        "name": "Environment",
-        "icon": "fa-thermometer-half",
-        "order": 2,
-        "disabled": false,
-        "hidden": false
+        "id": "3aee0419.f359ec",
+        "type": "telegram bot",
+        "botname": "Bonsai Automation Bot",
+        "usernames": "",
+        "chatids": "",
+        "baseapiurl": "",
+        "updatemode": "polling",
+        "pollinterval": "300",
+        "usesocks": false,
+        "sockshost": "",
+        "socksport": "6667",
+        "socksusername": "anonymous",
+        "sockspassword": "",
+        "bothost": "",
+        "botpath": "",
+        "localbotport": "8443",
+        "publicbotport": "8443",
+        "privatekey": "",
+        "certificate": "",
+        "useselfsignedcertificate": false,
+        "sslterminated": false,
+        "verboselogging": false
+    },
+    {
+        "id": "d92f504d.052e1",
+        "type": "serial-port",
+        "serialport": "/dev/ttyACM0",
+        "serialbaud": "9600",
+        "databits": "8",
+        "parity": "none",
+        "stopbits": "1",
+        "waitfor": "",
+        "dtr": "none",
+        "rts": "none",
+        "cts": "none",
+        "dsr": "none",
+        "newline": "\\n",
+        "bin": "false",
+        "out": "char",
+        "addchar": "",
+        "responsetimeout": "10000"
+    },
+    {
+        "id": "8c1fe2d4.3438d",
+        "type": "serial-port",
+        "serialport": "/dev/ttyACM0",
+        "serialbaud": "9600",
+        "databits": "8",
+        "parity": "none",
+        "stopbits": "1",
+        "waitfor": "",
+        "dtr": "none",
+        "rts": "none",
+        "cts": "none",
+        "dsr": "none",
+        "newline": "\\n",
+        "bin": "false",
+        "out": "char",
+        "addchar": "",
+        "responsetimeout": "10000"
+    },
+    {
+        "id": "dbd85f09.8e93d",
+        "type": "serial-port",
+        "serialport": "",
+        "serialbaud": "57600",
+        "databits": "8",
+        "parity": "none",
+        "stopbits": "1",
+        "waitfor": "",
+        "dtr": "none",
+        "rts": "none",
+        "cts": "none",
+        "dsr": "none",
+        "newline": "\\n",
+        "bin": "false",
+        "out": "char",
+        "addchar": "",
+        "responsetimeout": "10000"
     },
     {
         "id": "9d8b143e.d8e56",
@@ -207,7 +272,7 @@
         "id": "4f278035.7996",
         "type": "change",
         "z": "abf79b77.ec5958",
-        "name": "extract Moisture Sensor Reading",
+        "name": "extract A0",
         "rules": [
             {
                 "t": "set",
@@ -215,6 +280,13 @@
                 "pt": "msg",
                 "to": "payload.A0",
                 "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "SeijuElm_sensor1",
+                "tot": "str"
             }
         ],
         "action": "",
@@ -222,11 +294,11 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 620,
-        "y": 340,
+        "x": 580,
+        "y": 180,
         "wires": [
             [
-                "47765a63.5ab39c"
+                "fc2e2db9.5be81"
             ]
         ]
     },
@@ -257,7 +329,7 @@
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 120,
+        "x": 320,
         "y": 400,
         "wires": [
             [
@@ -304,34 +376,6 @@
         "wires": []
     },
     {
-        "id": "47765a63.5ab39c",
-        "type": "link out",
-        "z": "abf79b77.ec5958",
-        "name": "link_out_a0",
-        "links": [
-            "fe641766.0c8a2"
-        ],
-        "x": 855,
-        "y": 340,
-        "wires": []
-    },
-    {
-        "id": "fe641766.0c8a2",
-        "type": "link in",
-        "z": "59906611.8f5d48",
-        "name": "link_in_a0",
-        "links": [
-            "47765a63.5ab39c"
-        ],
-        "x": 305,
-        "y": 240,
-        "wires": [
-            [
-                "5a2f6ac9.7090b4"
-            ]
-        ]
-    },
-    {
         "id": "d8d1345a.21f658",
         "type": "change",
         "z": "abf79b77.ec5958",
@@ -350,56 +394,36 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 330,
+        "x": 530,
         "y": 400,
         "wires": [
             [
                 "4f278035.7996",
-                "bab4af5b.b0b288"
+                "391a326e.1545fe",
+                "ac42fad5.020bc8"
             ]
         ]
     },
     {
-        "id": "5a2f6ac9.7090b4",
-        "type": "range",
-        "z": "59906611.8f5d48",
-        "minin": "588",
-        "maxin": "327",
-        "minout": "0",
-        "maxout": "100",
-        "action": "scale",
-        "round": true,
-        "property": "payload",
-        "name": "A0: map 327:588 to 0:100",
-        "x": 470,
-        "y": 240,
-        "wires": [
-            [
-                "7550f7bb.5f5cf8",
-                "aa7f8fcd.0b0ba"
-            ]
-        ]
-    },
-    {
-        "id": "c5d7af98.2c0878",
+        "id": "9096e7d5.3e9858",
         "type": "ui_chart",
-        "z": "59906611.8f5d48",
+        "z": "abf79b77.ec5958",
         "name": "",
         "group": "e8c983dc.5966c",
-        "order": 3,
-        "width": 0,
-        "height": 0,
-        "label": "Soil Moisture History",
+        "order": 4,
+        "width": "6",
+        "height": "4",
+        "label": "",
         "chartType": "line",
-        "legend": "false",
+        "legend": "true",
         "xformat": "HH:mm:ss",
-        "interpolate": "linear",
+        "interpolate": "cubic",
         "nodata": "",
         "dot": false,
-        "ymin": "0",
-        "ymax": "100",
+        "ymin": "",
+        "ymax": "",
         "removeOlder": 1,
-        "removeOlderPoints": "600",
+        "removeOlderPoints": "604800",
         "removeOlderUnit": "604800",
         "cutout": 0,
         "useOneColor": false,
@@ -416,151 +440,46 @@
             "#c5b0d5"
         ],
         "outputs": 1,
-        "x": 1020,
-        "y": 200,
+        "x": 2010,
+        "y": 320,
         "wires": [
             []
         ]
     },
     {
-        "id": "c28bd069.2bc06",
-        "type": "ui_button",
-        "z": "59906611.8f5d48",
-        "name": "",
-        "group": "e8c983dc.5966c",
-        "order": 4,
-        "width": 0,
-        "height": 0,
-        "passthru": false,
-        "label": "Water 5s",
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "icon": "",
-        "payload": "",
-        "payloadType": "str",
-        "topic": "",
-        "x": 980,
-        "y": 280,
-        "wires": [
-            [
-                "b651c1bb.a42068"
-            ]
-        ]
-    },
-    {
-        "id": "a42bcd46.e540b",
-        "type": "ui_toast",
-        "z": "59906611.8f5d48",
-        "position": "dialog",
-        "displayTime": "5",
-        "highlight": "",
-        "sendall": false,
-        "outputs": 1,
-        "ok": "OK",
-        "cancel": "",
-        "raw": false,
-        "topic": "",
-        "name": "",
-        "x": 1450,
-        "y": 280,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "b651c1bb.a42068",
-        "type": "function",
-        "z": "59906611.8f5d48",
-        "name": "",
-        "func": "msg.payload = `Cannot connect to pump relay 1`\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "x": 1140,
-        "y": 280,
-        "wires": [
-            [
-                "5a621966.e696"
-            ]
-        ]
-    },
-    {
-        "id": "ae435370.11d088",
+        "id": "a326addf.a91db",
         "type": "ui_media",
-        "z": "59906611.8f5d48",
+        "z": "abf79b77.ec5958",
         "group": "e8c983dc.5966c",
         "name": "",
-        "width": 0,
-        "height": 0,
-        "order": 1,
+        "width": "6",
+        "height": "5",
+        "order": 2,
         "category": "Images",
-        "file": "seiju elm.png",
-        "layout": "adjust",
-        "showcontrols": true,
-        "loop": true,
+        "file": "20201229_193123.jpg",
+        "layout": "expand",
+        "showcontrols": false,
+        "loop": false,
         "onstart": false,
         "scope": "local",
         "tooltip": "",
-        "x": 970,
-        "y": 160,
+        "x": 2010,
+        "y": 280,
         "wires": [
             []
         ]
     },
     {
-        "id": "5a621966.e696",
-        "type": "delay",
-        "z": "59906611.8f5d48",
-        "name": "",
-        "pauseType": "random",
-        "timeout": "5",
-        "timeoutUnits": "seconds",
-        "rate": "1",
-        "nbRateUnits": "1",
-        "rateUnits": "second",
-        "randomFirst": "500",
-        "randomLast": "2500",
-        "randomUnits": "milliseconds",
-        "drop": false,
-        "x": 1300,
-        "y": 280,
-        "wires": [
-            [
-                "a42bcd46.e540b"
-            ]
-        ]
-    },
-    {
-        "id": "7550f7bb.5f5cf8",
-        "type": "rbe",
-        "z": "59906611.8f5d48",
-        "name": "reduceNoise",
-        "func": "deadband",
-        "gap": "1",
-        "start": "",
-        "inout": "out",
-        "property": "payload",
-        "x": 790,
-        "y": 200,
-        "wires": [
-            [
-                "c5d7af98.2c0878"
-            ]
-        ]
-    },
-    {
-        "id": "ba2a2c92.cb3a4",
+        "id": "6732a4dc.02494c",
         "type": "ui_button",
-        "z": "59906611.8f5d48",
+        "z": "abf79b77.ec5958",
         "name": "",
         "group": "e8c983dc.5966c",
-        "order": 4,
-        "width": 0,
-        "height": 0,
+        "order": 5,
+        "width": "0",
+        "height": "0",
         "passthru": false,
-        "label": "Clear History",
+        "label": "Clear",
         "tooltip": "",
         "color": "",
         "bgcolor": "",
@@ -568,18 +487,18 @@
         "payload": "[]",
         "payloadType": "json",
         "topic": "",
-        "x": 750,
-        "y": 120,
+        "x": 1850,
+        "y": 320,
         "wires": [
             [
-                "c5d7af98.2c0878"
+                "9096e7d5.3e9858"
             ]
         ]
     },
     {
-        "id": "40acbfb6.9945",
+        "id": "a9497bca.4381b8",
         "type": "ui_chart",
-        "z": "97a3a467.80c6c",
+        "z": "abf79b77.ec5958",
         "name": "",
         "group": "a23d5a99.c03468",
         "order": 1,
@@ -612,73 +531,48 @@
             "#c5b0d5"
         ],
         "outputs": 1,
-        "x": 880,
-        "y": 360,
+        "x": 1320,
+        "y": 640,
         "wires": [
             []
         ]
     },
     {
-        "id": "bab4af5b.b0b288",
-        "type": "link out",
-        "z": "abf79b77.ec5958",
-        "name": "link_out_dht11",
-        "links": [
-            "3fce98e2.38375"
-        ],
-        "x": 495,
-        "y": 480,
-        "wires": []
-    },
-    {
-        "id": "3fce98e2.38375",
-        "type": "link in",
-        "z": "97a3a467.80c6c",
-        "name": "",
-        "links": [
-            "bab4af5b.b0b288"
-        ],
-        "x": 315,
-        "y": 320,
-        "wires": [
-            [
-                "d6b7c691.108cb"
-            ]
-        ]
-    },
-    {
-        "id": "d6b7c691.108cb",
+        "id": "391a326e.1545fe",
         "type": "function",
-        "z": "97a3a467.80c6c",
+        "z": "abf79b77.ec5958",
         "name": "",
         "func": "var temperature = {\n    payload:  msg.payload.TC,\n    topic: \"Temperature\"\n};\nvar humidity = {\n    payload : msg.payload.HP,\n    topic: \"Humidity\"\n};\nvar heatIndex = {\n    payload: msg.payload.HI,\n    topic: \"Heat Index\"\n};\n\nreturn [temperature,humidity,heatIndex];",
         "outputs": 3,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 440,
-        "y": 280,
+        "x": 640,
+        "y": 640,
         "wires": [
             [
-                "40acbfb6.9945",
-                "1046152.dc97e6b"
+                "a9497bca.4381b8",
+                "27c48571.2d48ca",
+                "cfd06bb0.f3f818"
             ],
             [
-                "40acbfb6.9945",
-                "a6f6004d.2fc86"
+                "a9497bca.4381b8",
+                "592f8090.89426",
+                "a645c763.e7aae8"
             ],
             [
-                "55359a07.b0b87c"
+                "9bfa02b8.3069b",
+                "993e1c60.ee77e"
             ]
         ]
     },
     {
-        "id": "1046152.dc97e6b",
+        "id": "27c48571.2d48ca",
         "type": "ui_gauge",
-        "z": "97a3a467.80c6c",
+        "z": "abf79b77.ec5958",
         "name": "",
         "group": "a23d5a99.c03468",
-        "order": 3,
+        "order": 2,
         "width": "2",
         "height": "2",
         "gtype": "donut",
@@ -694,17 +588,17 @@
         ],
         "seg1": "",
         "seg2": "",
-        "x": 810,
-        "y": 100,
+        "x": 1270,
+        "y": 520,
         "wires": []
     },
     {
-        "id": "a6f6004d.2fc86",
+        "id": "592f8090.89426",
         "type": "ui_gauge",
-        "z": "97a3a467.80c6c",
+        "z": "abf79b77.ec5958",
         "name": "",
         "group": "a23d5a99.c03468",
-        "order": 4,
+        "order": 3,
         "width": "2",
         "height": "2",
         "gtype": "donut",
@@ -720,17 +614,17 @@
         ],
         "seg1": "",
         "seg2": "",
-        "x": 800,
-        "y": 140,
+        "x": 1260,
+        "y": 560,
         "wires": []
     },
     {
-        "id": "2ea06491.2443ec",
+        "id": "9933d3d0.189ed",
         "type": "ui_gauge",
-        "z": "97a3a467.80c6c",
+        "z": "abf79b77.ec5958",
         "name": "",
         "group": "a23d5a99.c03468",
-        "order": 5,
+        "order": 4,
         "width": "2",
         "height": "2",
         "gtype": "donut",
@@ -746,38 +640,38 @@
         ],
         "seg1": "80",
         "seg2": "",
-        "x": 810,
-        "y": 180,
+        "x": 1270,
+        "y": 600,
         "wires": []
     },
     {
-        "id": "55359a07.b0b87c",
+        "id": "9bfa02b8.3069b",
         "type": "function",
-        "z": "97a3a467.80c6c",
+        "z": "abf79b77.ec5958",
         "name": "Math.round",
         "func": "msg.payload = Math.round(msg.payload);\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "x": 630,
-        "y": 360,
+        "x": 870,
+        "y": 700,
         "wires": [
             [
-                "2ea06491.2443ec",
-                "40acbfb6.9945"
+                "9933d3d0.189ed",
+                "a9497bca.4381b8"
             ]
         ]
     },
     {
-        "id": "2f2bd344.af4db4",
+        "id": "3fe8467b.03443a",
         "type": "ui_media",
-        "z": "97a3a467.80c6c",
+        "z": "abf79b77.ec5958",
         "group": "a23d5a99.c03468",
         "name": "",
         "width": "6",
         "height": "2",
-        "order": 6,
+        "order": 5,
         "category": "Images",
         "file": "heatIndex.png",
         "layout": "center",
@@ -786,36 +680,396 @@
         "onstart": false,
         "scope": "local",
         "tooltip": "",
-        "x": 630,
+        "x": 850,
+        "y": 780,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5be48a1e.3088d4",
+        "type": "ui_button",
+        "z": "abf79b77.ec5958",
+        "name": "",
+        "group": "a23d5a99.c03468",
+        "order": 6,
+        "width": "0",
+        "height": "0",
+        "passthru": false,
+        "label": "Clear",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "[]",
+        "payloadType": "json",
+        "topic": "",
+        "x": 850,
+        "y": 740,
+        "wires": [
+            [
+                "a9497bca.4381b8"
+            ]
+        ]
+    },
+    {
+        "id": "ac42fad5.020bc8",
+        "type": "change",
+        "z": "abf79b77.ec5958",
+        "name": "extract A1",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.A1",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "SeijuElm_sensor2",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 580,
+        "y": 220,
+        "wires": [
+            [
+                "9c542da8.dfe7c"
+            ]
+        ]
+    },
+    {
+        "id": "9c542da8.dfe7c",
+        "type": "range",
+        "z": "abf79b77.ec5958",
+        "minin": "535",
+        "maxin": "275",
+        "minout": "0",
+        "maxout": "100",
+        "action": "scale",
+        "round": true,
+        "property": "payload",
+        "name": "DFRobot Calibration",
+        "x": 780,
+        "y": 220,
+        "wires": [
+            [
+                "1f5b4a01.f27d66"
+            ]
+        ]
+    },
+    {
+        "id": "fc2e2db9.5be81",
+        "type": "range",
+        "z": "abf79b77.ec5958",
+        "minin": "535",
+        "maxin": "275",
+        "minout": "0",
+        "maxout": "100",
+        "action": "scale",
+        "round": true,
+        "property": "payload",
+        "name": "DFRobot Calibration",
+        "x": 780,
+        "y": 180,
+        "wires": [
+            [
+                "1f5b4a01.f27d66"
+            ]
+        ]
+    },
+    {
+        "id": "1f5b4a01.f27d66",
+        "type": "moving-average",
+        "z": "abf79b77.ec5958",
+        "name": "",
+        "amount": 10,
+        "weight": "cumulative",
+        "x": 1050,
+        "y": 200,
+        "wires": [
+            [
+                "3fe3a11f.09448e",
+                "fd5a215d.98a9d"
+            ]
+        ]
+    },
+    {
+        "id": "a947218b.af3d",
+        "type": "change",
+        "z": "abf79b77.ec5958",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "Soil Moisture Reading",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1510,
+        "y": 200,
+        "wires": [
+            [
+                "9096e7d5.3e9858"
+            ]
+        ]
+    },
+    {
+        "id": "3fe3a11f.09448e",
+        "type": "rbe",
+        "z": "abf79b77.ec5958",
+        "name": "minimumChange(1)",
+        "func": "deadbandEq",
+        "gap": "1",
+        "start": "",
+        "inout": "out",
+        "property": "payload",
+        "x": 1310,
+        "y": 200,
+        "wires": [
+            [
+                "a947218b.af3d"
+            ]
+        ]
+    },
+    {
+        "id": "5ed73a25.f8f614",
+        "type": "telegram command",
+        "z": "c742ded6.a2c3d",
+        "name": "/start",
+        "command": "/start",
+        "bot": "3aee0419.f359ec",
+        "strict": false,
+        "hasresponse": false,
+        "useregex": false,
+        "removeregexcommand": false,
+        "outputs": 1,
+        "x": 250,
+        "y": 180,
+        "wires": [
+            [
+                "33dd0dec.ca5172"
+            ]
+        ]
+    },
+    {
+        "id": "98f543b8.ad70e",
+        "type": "telegram sender",
+        "z": "c742ded6.a2c3d",
+        "name": "",
+        "bot": "3aee0419.f359ec",
+        "haserroroutput": false,
+        "outputs": 1,
+        "x": 930,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "33dd0dec.ca5172",
+        "type": "function",
+        "z": "c742ded6.a2c3d",
+        "name": "startMessage",
+        "func": "msg.payload.content = \n`Welcome to the Bonsai Monitoring Bot\n\nYou can send:\n\n/status - get status of plants\n`;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 480,
+        "y": 140,
+        "wires": [
+            [
+                "98f543b8.ad70e"
+            ]
+        ]
+    },
+    {
+        "id": "d365ecf0.c8888",
+        "type": "telegram command",
+        "z": "c742ded6.a2c3d",
+        "name": "/help",
+        "command": "/help",
+        "bot": "3aee0419.f359ec",
+        "strict": false,
+        "hasresponse": true,
+        "useregex": false,
+        "removeregexcommand": false,
+        "outputs": 2,
+        "x": 250,
+        "y": 120,
+        "wires": [
+            [
+                "33dd0dec.ca5172"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "fd5a215d.98a9d",
+        "type": "change",
+        "z": "abf79b77.ec5958",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "seiju_elm_moisture",
+                "pt": "global",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 910,
+        "y": 360,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7b5e9711.a95298",
+        "type": "telegram command",
+        "z": "c742ded6.a2c3d",
+        "name": "/status",
+        "command": "/status",
+        "bot": "3aee0419.f359ec",
+        "strict": false,
+        "hasresponse": false,
+        "useregex": false,
+        "removeregexcommand": false,
+        "outputs": 1,
+        "x": 250,
+        "y": 260,
+        "wires": [
+            [
+                "29328086.6a74b"
+            ]
+        ]
+    },
+    {
+        "id": "cfd06bb0.f3f818",
+        "type": "change",
+        "z": "abf79b77.ec5958",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "env_temperature",
+                "pt": "global",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 900,
+        "y": 400,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a645c763.e7aae8",
+        "type": "change",
+        "z": "abf79b77.ec5958",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "env_humidity",
+                "pt": "global",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 890,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "993e1c60.ee77e",
+        "type": "change",
+        "z": "abf79b77.ec5958",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "env_heatindex",
+                "pt": "global",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 890,
         "y": 480,
         "wires": [
             []
         ]
     },
     {
-        "id": "aa7f8fcd.0b0ba",
-        "type": "ui_gauge",
-        "z": "59906611.8f5d48",
+        "id": "3fd7774.b620a88",
+        "type": "telegram sender",
+        "z": "c742ded6.a2c3d",
         "name": "",
-        "group": "e8c983dc.5966c",
-        "order": 3,
-        "width": "2",
-        "height": "2",
-        "gtype": "wave",
-        "title": "Moisture",
-        "label": "%",
-        "format": "{{value}}",
-        "min": "0",
-        "max": "100",
-        "colors": [
-            "#b51200",
-            "#e6e600",
-            "#388eca"
-        ],
-        "seg1": "",
-        "seg2": "",
-        "x": 980,
-        "y": 240,
-        "wires": []
+        "bot": "3aee0419.f359ec",
+        "haserroroutput": false,
+        "outputs": 1,
+        "x": 770,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "29328086.6a74b",
+        "type": "function",
+        "z": "c742ded6.a2c3d",
+        "name": "statusMessage",
+        "func": "\nlet heat_classification = '';\nlet hi = global.get('env_heatindex');\n\nif(hi <= 80)\n    heat_classification = \"Normal\";\nelse if(hi <= 90)\n    heat_classification = \"Caution\";\nelse if(hi<= 103)\n    heat_classification = \"Extreme Caution\";\nelse if(hi <= 124)\n    heat_classification = \"Danger\";\nelse\n    heat_classification = \"Extreme Danger\"\n\n\n\nmsg.payload.content = \n`Environment:\n- Temperature: ${global.get('env_temperature')}°C\n- Humidity: ${global.get('env_humidity')}%\n- Heat Index: ${heat_classification}\n\nTrees:\n- Seiju Elm Soil Moisture: ${global.get('seiju_elm_moisture')}%`;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 480,
+        "y": 260,
+        "wires": [
+            [
+                "3fd7774.b620a88"
+            ]
+        ]
     }
 ]
