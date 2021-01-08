@@ -17,9 +17,7 @@
 //#define SECRET_SSID "YOURSSID"
 //#define SECRET_PASS "YOURPASSWD"
 //#define SECRET_BROKER "YOURBROKER"
-//#define SECRET_BROKER_PORT YOURBROKERPORTNUMBER
 //#define SECRET_TOPIC_PUBLISH "YOURPUBTOPIC"
-//#define SECRET_TOPIC_SUBSCRIBE "YOURSUBTOPIC"
 
 #define DHTTYPE DHT11   // DHT 11 
 //#define DHTTYPE DHT22   // DHT 22  (AM2302)
@@ -30,13 +28,11 @@ DHT dht(DHTPIN, DHTTYPE);
 const char ssid[] = SECRET_SSID;
 const char pass[] = SECRET_PASS;
 const char broker[] = SECRET_BROKER;
-const int port = SECRET_BROKER_PORT;
+const int port = 1883;
 const char topic_publish[]  = SECRET_TOPIC_PUBLISH;
-const char topic_subscribe[]  = SECRET_TOPIC_SUBSCRIBE;
 
 WiFiClient wifiClient;
 MqttClient mqttClient(wifiClient);
-
 
 //Dynamic variables
 float analogueValues[] = {0, 0, 0, 0, 0, 0};
@@ -85,13 +81,6 @@ void setup() {
   }
 
   Serial.println("You're connected to the MQTT broker!");
-
-  Serial.print("Subscribing to topic: ");
-  Serial.println(topic_subscribe);
-  Serial.println();
-
-  // subscribe to a topic
-  mqttClient.subscribe(topic_subscribe);
 }
 
 void loop() {
@@ -142,5 +131,5 @@ void loop() {
   mqttClient.print(json);
   mqttClient.endMessage();
 
-  delay(2000);
+  delay(60000);
 }
